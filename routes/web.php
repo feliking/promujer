@@ -17,4 +17,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 Route::get('/home', 'HomeController@index')->name('home');
+
+//Providers
+Route::get('/providers_personal/main', 'ProviderPersonalController@main')->name('provider_personals.main')->middleware('auth');
+Route::apiResource('provider_personals', 'ProviderPersonalController')->middleware('auth');
