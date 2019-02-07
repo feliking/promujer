@@ -229,7 +229,6 @@ Proveedores: Persona Natural
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    @{{ proveedor }}
                     <div class="modal-body">
                             <div class="row form-group">
                             <div class="col col-md-3"><label for="text-input" class="form-control-label">Código</label></div>
@@ -354,7 +353,6 @@ Proveedores: Persona Natural
             axios.get('/provider_personals').then(response => {
                 this.cities = response.data[0];
                 this.providers = response.data[1];
-                //$('#bootstrap-data-table-export').DataTable();
                 setTimeout(function(){$('#bootstrap-data-table-export').DataTable(
                     {
                     //searching: false,
@@ -380,9 +378,6 @@ Proveedores: Persona Natural
                     },
                 }
                 );}, 1000);
-                console.log(this.cities);
-                console.log(this.providers);
-                console.log('conexion positiva');
             });
         },
         methods:{
