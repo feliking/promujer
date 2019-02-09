@@ -101,9 +101,11 @@ class ProviderPersonalController extends Controller
      * @param  \App\ProviderPersonal  $providerPersonal
      * @return \Illuminate\Http\Response
      */
-    public function show(ProviderPersonal $providerPersonal)
+    public function show($id)
     {
-        //
+        return 'Entro a show';
+        $provider = ProviderPersonal::find($id);
+        return $provider;
     }
 
     /**
@@ -187,5 +189,14 @@ class ProviderPersonalController extends Controller
             Storage::disk('public')->delete($provider->file_nit);
         }
         $provider->delete();
+    }
+    public function search($id)
+    {
+        if ($provider = ProviderPersonal::where('code', $id)->first()) {
+            return $provider;
+        }
+        else{
+            abort(422);
+        }
     }
 }

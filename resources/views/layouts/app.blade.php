@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{asset('css/lib/pe-icon-7-stroke.min.css') }}">
     <link rel="stylesheet" href="{{asset('css/lib/flag-icon.min.css') }}">
     <link rel="stylesheet" href="{{asset('css/lib/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{asset('css/lib/print.min.css') }}">
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('css/cs-skin-elastic.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -32,7 +33,7 @@
 
 </head>
 
-<body>
+<body class="open">
     <!-- Left Panel -->
 
     <aside id="left-panel" class="left-panel">
@@ -284,6 +285,7 @@ if (token) {
 <script src="{{ asset('js/lib/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/lib/jquery.matchHeight.min.js') }}"></script>
 <script src="{{ asset('js/lib/toastr.min.js') }}"></script>
+<script src="{{ asset('js/lib/print.min.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="{{ asset('js/lib/chosen/chosen.jquery.min.js') }}"></script>
 

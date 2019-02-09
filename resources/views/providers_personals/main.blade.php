@@ -6,8 +6,12 @@ Proveedores: Persona Natural
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/lib/datatable/dataTables.bootstrap.min.css') }}">
+<style>
+.dataTables_filter{
+    float: left;
+}
+</style>
 @endsection
-
 @section('content')
 <div class="row">
 
@@ -16,10 +20,10 @@ Proveedores: Persona Natural
                 <div class="card-header">
                     <strong class="card-title">Lista de Proveedores: Persona Natural</strong>
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_provider_personal"><i class="fa fa-plus"></i></button>
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#staticModal"><i class="fa fa-print"></i></button>
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#print"><i class="fa fa-print"></i></button>
                 </div>
                 
-                <div class="card-body">
+                <div class="card-body text-left">
                     <table id="bootstrap-data-table-export" class="table table-striped table-bordered dt-responsive nowrap">
                         <thead>
                             <tr>
@@ -292,7 +296,7 @@ Proveedores: Persona Natural
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">Carnet de identidad</label></div>
-                                <div class="col-12 col-md-7"><input type="file" id="file_identity_card_update" ref="file_identity_card" name="file_identity_card_update" class="form-control-file">
+                                <div class="col-12 col-md-7"><input type="file" :id="'file_identity_card_update'+proveedor.id" ref="file_identity_card" name="file_identity_card_update" class="form-control-file">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <a :href="'../storage/'+proveedor.file_identity_card" target="_blank">
@@ -304,7 +308,7 @@ Proveedores: Persona Natural
                             
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">NIT</label></div>
-                                <div class="col-12 col-md-7"><input type="file" id="file_nit_update" ref="file_nit" name="file_nit_update" class="form-control-file"></div>
+                                <div class="col-12 col-md-7"><input type="file" :id="'file_nit_update'+proveedor.id" ref="file_nit" name="file_nit_update" class="form-control-file"></div>
                                 <div class="col-12 col-md-2">
                                     <a :href="'../storage/'+proveedor.file_nit" target="_blank">
                                         <button v-if="proveedor.file_nit" type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
@@ -315,7 +319,7 @@ Proveedores: Persona Natural
                             
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </div>
                 </form>
@@ -323,6 +327,93 @@ Proveedores: Persona Natural
         </div>
     </div>
     {{-- Fin de Modal de edición --}}
+    {{-- Modal de impresión --}}
+    <div class="modal fade" id="print" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="mediumModalLabel">Imprimir Proveedor</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class="form-control-label">Introduzca el código</label></div>
+                                <div class="col-12 col-md-8"><input type="text" id="text-input" name="code" class="form-control" v-model="print.code"></div>
+                                <div class="col-12 col-md-1">
+                                    <button type="button" class="btn btn-primary" :class="print.identity_card ? 'btn-success' : 'btn-danger'" @click.prevent="getProvider()"><i class="fa fa-search"></i></button></div>
+                            </div>
+                            <div v-if="print.identity_card">
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Apellidos</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.last_name }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nombres</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.first_name }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="email-input" class=" form-control-label">Carnet de identidad</label></div>
+                                <div class="col-12 col-md-5"><p class="form-control-static">@{{ print.identity_card }}</p></div>
+                                <div class="col col-md-1"><label for="email-input" class=" form-control-label">Exp.</label></div>
+                                <div class="col-12 col-md-3"><p v-if="print.city_id" class="form-control-static">@{{ getCity(print) }}</p>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">NIT</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.nit }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nacionalidad</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.nationality }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Actividad economica</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.economic_activity }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Ciudad de residencia</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.residence_city }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Teléfonos</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.phone }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Dirección</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.address }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Corréo Electrónico</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.email }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nro Cuenta</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.nro_acount }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Monto Adjudicado</label></div>
+                                <div class="col-12 col-md-9"><input type="text" id="text-input" name="nro_acount" class="form-control" v-model="print.mount_awarded"></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Detalle de monto Adjudicado</label></div>
+                                <div class="col-12 col-md-9"><input type="text" id="text-input" name="nro_acount" class="form-control" v-model="print.detail_mount_awarded"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button v-if="print.identity_card" type="submit" class="btn btn-danger">PDF</button>
+                        <button v-if="print.identity_card" type="submit" class="btn btn-info">Imprimir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{-- Fin de Modal de impresión --}}
+
 @endsection
 
 @section('scripts')
@@ -346,7 +437,7 @@ Proveedores: Persona Natural
                     code:''
                 },
                 errors:[],
-                city: ''
+                print:{}
             }
         },
         mounted() {
@@ -355,7 +446,9 @@ Proveedores: Persona Natural
                 this.providers = response.data[1];
                 setTimeout(function(){$('#bootstrap-data-table-export').DataTable(
                     {
+                        "dom": '<"text-left"<f>>rtip',
                     //searching: false,
+                    //paging: false,
                     language: {
                         "decimal": "",
                         "emptyTable": "No hay información",
@@ -430,6 +523,8 @@ Proveedores: Persona Natural
                 });
             },
             updateProvider(provider, index){
+                const file_identity_card = 'file_identity_card_update'+provider.id;
+                const file_nit = 'file_nit_update'+provider.id;
                 let data = new FormData();
                 data.append('_method', 'PATCH');
                 data.append('code', provider.code);
@@ -445,19 +540,33 @@ Proveedores: Persona Natural
                 data.append('address', provider.address);
                 data.append('email', provider.email);
                 data.append('nro_acount', provider.nro_acount);
-                data.append('file_identity_card_update', document.getElementById('file_identity_card_update').files[0]);
-                data.append('file_nit_update', document.getElementById('file_nit_update').files[0]);
+                data.append('file_identity_card_update', document.getElementById(file_identity_card).files[0]);
+                data.append('file_nit_update', document.getElementById(file_nit).files[0]);
                 axios.post('/provider_personals/'+provider.id, data).then(response => {
                     const providers = response.data;
                     this.providers = providers;
-                    document.getElementById('file_identity_card_update').value = null;
-                    document.getElementById('file_nit_update').value = null;
+                    document.getElementById(file_identity_card).value = null;
+                    document.getElementById(file_nit).value = null;
                     this.errors = [];
                     toastr.success('Operacion exitosa', 'Proveedor Actualizado');
                 }).catch(error => {
                     toastr.error('¡Error!', 'No se pudo actualizar');
                 });
                 
+            },
+            getProvider(){
+                axios.get('/providers_personal/search/'+this.print.code).then(response => {
+                    const print = response.data;
+                    console.log(print);
+                    this.print = print;
+                    toastr.success('Proveedor encontrado', '¡Exito!');
+                }).catch(error => {
+                    const code = this.print.code;
+                    this.print = {
+                        code: code
+                    };
+                    toastr.error('No se encontro al proveedor', '¡Error!');
+                })
             }
         }
         

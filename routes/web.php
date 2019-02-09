@@ -23,3 +23,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 //Providers
 Route::get('/providers_personal/main', 'ProviderPersonalController@main')->name('provider_personals.main')->middleware('auth');
 Route::apiResource('provider_personals', 'ProviderPersonalController')->middleware('auth');
+Route::get('/providers_personal/search/{id}', 'ProviderPersonalController@search')->name('provider_personals.search')->middleware('auth');
