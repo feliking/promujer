@@ -12,8 +12,8 @@
     <meta name="description" content="Ela Admin - HTML5 Admin Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
-    <link rel="shortcut icon" href="https://i.imgur.com/QRAUqs9.png">
+    <link rel="apple-touch-icon" href="{{ asset('images/favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}">
 
     <link rel="stylesheet" href="{{asset('css/lib/normalize.min.css') }}">
     <link rel="stylesheet" href="{{asset('css/lib/bootstrap.min.css') }}">
@@ -45,7 +45,7 @@
                         <a href="{{ route('dashboard') }}"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
                     </li>
                     <li class="menu-title">Administración</li><!-- /.menu-title -->
-                    <li class="menu-item-has-children dropdown">
+                    <li class="menu-item-has-children dropdown" title="Proveedores">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-cogs"></i>Proveedores</a>
                         <ul class="sub-menu children dropdown-menu">                            
                             <li><i class="fa fa-puzzle-piece"></i><a href="{{ route('provider_personals.main') }}">Persona Natural</a></li>
@@ -117,21 +117,15 @@
         <header id="header" class="header">
             <div class="top-left">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="./"><img src="images/logo.png" alt="Logo"></a>
-                    <a class="navbar-brand hidden" href="./"><img src="images/logo2.png" alt="Logo"></a>
+                    <a class="navbar-brand" href="./"><img src="{{ asset('images/logo.png') }}" alt="Logo"></a>
+                    <a class="navbar-brand hidden" href="./"><img src="{{ asset('images/logo2.png') }}" alt="Logo"></a>
                     <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                 </div>
             </div>
             <div class="top-right">
                 <div class="header-menu">
                     <div class="header-left">
-                        <button class="search-trigger"><i class="fa fa-search"></i></button>
-                        <div class="form-inline">
-                            <form class="search-form">
-                                <input class="form-control mr-sm-2" type="text" placeholder="Search ..." aria-label="Search">
-                                <button class="search-close" type="submit"><i class="fa fa-close"></i></button>
-                            </form>
-                        </div>
+                        
 
                         <div class="dropdown for-notification">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -267,25 +261,25 @@
 
 <script src="{{ asset('js/vue.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
-<script>
-//window.axios = require('axios');
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-let token = document.head.querySelector('meta[name="csrf-token"]');
-
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
-</script>
 <script src="{{ asset('js/lib/jquery.min.js') }}"></script>
 <script src="{{ asset('js/lib/popper.min.js') }}"></script>
 <script src="{{ asset('js/lib/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/lib/jquery.matchHeight.min.js') }}"></script>
 <script src="{{ asset('js/lib/toastr.min.js') }}"></script>
 <script src="{{ asset('js/lib/print.min.js') }}"></script>
+<script>
+    
+    window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    
+    let token = document.head.querySelector('meta[name="csrf-token"]');
+    
+    if (token) {
+        window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    } else {
+        console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+    }
+</script>
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="{{ asset('js/lib/chosen/chosen.jquery.min.js') }}"></script>
 

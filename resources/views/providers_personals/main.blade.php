@@ -19,8 +19,8 @@ Proveedores: Persona Natural
             <div class="card">
                 <div class="card-header">
                     <strong class="card-title">Lista de Proveedores: Persona Natural</strong>
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_provider_personal"><i class="fa fa-plus"></i></button>
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#print"><i class="fa fa-print"></i></button>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_provider_personal" title="Añadir Proveedor"><i class="fa fa-plus"></i></button>
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#print" title="Imprimir"><i class="fa fa-print"></i></button>
                 </div>
                 
                 <div class="card-body text-left">
@@ -557,7 +557,6 @@ Proveedores: Persona Natural
             getProvider(){
                 axios.get('/providers_personal/search/'+this.print.code).then(response => {
                     const print = response.data;
-                    console.log(print);
                     this.print = print;
                     toastr.success('Proveedor encontrado', '¡Exito!');
                 }).catch(error => {
