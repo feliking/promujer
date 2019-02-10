@@ -199,4 +199,15 @@ class ProviderPersonalController extends Controller
             abort(422);
         }
     }
+    public function print($id){
+        $provider = ProviderPersonal::find($id);
+        $args = array(
+            'id' => $provider->id,
+            'code' => $provider->code
+        );
+        return \PDF::loadView('layouts.print.print_provider_personal', $args)
+				->setPaper('letter')
+				->setOption('encoding', 'utf-8')
+				->stream("dictamenLegal.pdf");
+    }
 }

@@ -405,7 +405,7 @@ Proveedores: Persona Natural
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button v-if="print.identity_card" type="submit" class="btn btn-danger">PDF</button>
+                        <button v-if="print.identity_card" type="submit" class="btn btn-danger" @click.prevent="pdfForm()">PDF</button>
                         <button v-if="print.identity_card" type="submit" class="btn btn-info">Imprimir</button>
                     </div>
                 </form>
@@ -566,6 +566,11 @@ Proveedores: Persona Natural
                     };
                     toastr.error('No se encontro al proveedor', '¡Error!');
                 })
+            },
+            pdfForm(){
+                axios.get('/providers_personal/print_provider_personals/'+this.print.id).then(response => {
+                    toastr.warning('Generando archivo PDF', 'Generando');
+                });
             }
         }
         
