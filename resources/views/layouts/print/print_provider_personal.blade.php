@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Document</title>
     <link rel="stylesheet" href="{{asset('css/lib/bootstrap.min.css') }}">
 </head>
@@ -19,12 +20,20 @@
             <tbody>
                 <tr>
                 <th scope="row">
-                    {{ $id }}
-                    {{ $code }}
+                    {{ $provider->id }}
+                    {{ $provider->code }}
+                    {{ Auth::user()->name }}
+                    {{ $provider->city_id }}
                 </th>
                 </tr>
             </tbody>
         </table>
     </div>
+    <script src="{{ asset('js/lib/jquery.min.js') }}"></script>
+    <script>
+    $( document ).ready(function() {
+        window.print();
+    });
+    </script>
 </body>
 </html>

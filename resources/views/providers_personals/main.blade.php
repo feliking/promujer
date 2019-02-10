@@ -332,6 +332,7 @@ Proveedores: Persona Natural
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <form class="form-horizontal">
+                    @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="mediumModalLabel">Imprimir Proveedor</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -395,18 +396,18 @@ Proveedores: Persona Natural
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Monto Adjudicado</label></div>
-                                <div class="col-12 col-md-9"><input type="text" id="text-input" name="nro_acount" class="form-control" v-model="print.mount_awarded"></div>
+                                <div class="col-12 col-md-9"><input type="text" id="text-input" name="mount_awarded" class="form-control" v-model="print.mount_awarded" required></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Detalle de monto Adjudicado</label></div>
-                                <div class="col-12 col-md-9"><input type="text" id="text-input" name="nro_acount" class="form-control" v-model="print.detail_mount_awarded"></div>
+                                <div class="col-12 col-md-9"><input type="text" id="text-input" name="detail_mount_awarded" class="form-control" v-model="print.detail_mount_awarded" required></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button v-if="print.identity_card" type="submit" class="btn btn-danger" @click.prevent="pdfForm()">PDF</button>
-                        <button v-if="print.identity_card" type="submit" class="btn btn-info">Imprimir</button>
+                        <button v-if="print.identity_card" type="button" class="btn btn-danger" @click.prevent="formPdf()" id="formpdf">PDF</button>
+                        <button v-if="print.identity_card" type="submit" class="btn btn-info" @click.prevent="formPrint">Imprimir</button>
                     </div>
                 </form>
             </div>
@@ -437,7 +438,8 @@ Proveedores: Persona Natural
                     code:''
                 },
                 errors:[],
-                print:{}
+                print:{},
+                action: ''
             }
         },
         mounted() {
@@ -567,9 +569,40 @@ Proveedores: Persona Natural
                     toastr.error('No se encontro al proveedor', '¡Error!');
                 })
             },
-            pdfForm(){
-                axios.get('/providers_personal/print_provider_personals/'+this.print.id).then(response => {
-                    toastr.warning('Generando archivo PDF', 'Generando');
+            formPdf(){
+                const data = new FormData();
+                data.append('_method', 'POST');
+                data.append('code', this.print.code);
+                data.append('mount_awarded', this.print.mount_awarded);
+                data.append('detail_mount_awarded', this.print.detail_mount_awarded);
+                axios.post('/providers_personal/provider_personals/pdf', data, {
+                    responseType: 'blob'
+                }).then(response => {
+                    var d = new Date();
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    const name =  String(d.getDate()+'/'+eval(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()+' '+this.print.code+'.pdf');
+                    console.log(name);
+                    link.setAttribute('download',name);
+                    document.body.appendChild(link);
+                    link.click();
+                });
+            },
+            formPrint(){
+                const data = new FormData();
+                data.append('_method', 'POST');
+                data.append('code', this.print.code);
+                data.append('mount_awarded', this.print.mount_awarded);
+                data.append('detail_mount_awarded', this.print.detail_mount_awarded);
+                axios.post('/providers_personal/provider_personals/pdf', data, {
+                    responseType: 'arraybuffer'
+                }).then(response => {
+                    var pdfFile = new Blob([response.data], {
+                        type: "application/pdf"
+                    });
+                    var pdfUrl = URL.createObjectURL(pdfFile);
+                    printJS(pdfUrl);
                 });
             }
         }

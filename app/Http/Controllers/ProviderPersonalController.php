@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\ProviderPersonal;
 use App\City;
@@ -209,5 +211,32 @@ class ProviderPersonalController extends Controller
 				->setPaper('letter')
 				->setOption('encoding', 'utf-8')
 				->stream("dictamenLegal.pdf");
+    }
+    public function pdf(Request $request){
+        //return $request;
+        $provider = ProviderPersonal::where('code', $request->code)->first();
+        $date = Carbon::now();
+        // $params = array(
+        //     'id' => $provider->id,
+        //     'code' => $request->code,
+        //     'last_name' => $request->last_name,
+        //     'first_name' => $request->code,
+        //     'identity_card' => $request->identity_card,
+        //     'city_id' => $provider->city->name,
+        //     'nit' => $request->nit,
+        //     'nationality' => $request->nationality,
+        //     'economic_activity' => $request->economic_activity,
+        //     'residence_city' => $request->residence_city,
+        //     'phone' => $request->phone,
+        //     'address' => $request->address,
+        //     'email' => $request->email,
+        //     'nro_acount' => $request->nro_acount,
+        //     'amount_awarded' => $request->amount_awarded,
+        //     'detail_amount_awarded' => $request->detail_amount_awarded,
+        //     'user' => auth()->user(),
+        // );
+        return PDF::loadView('layouts.print.print_provider_personal', compact('provider'))
+				->setPaper('letter')
+				->stream($request->code." ".$date.".pdf");
     }
 }
