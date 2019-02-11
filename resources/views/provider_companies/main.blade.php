@@ -513,13 +513,41 @@ Proveedores: Persona Juridica
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="row form-group">
+                            <div class="col col-md-3"><label for="text-input" class="form-control-label">Introduzca el código</label></div>
+                            <div class="col-12 col-md-8"><input type="text" id="text-input" name="code" class="form-control" v-model="print.code"></div>
+                            <div class="col-12 col-md-1">
+                                <button type="button" class="btn btn-primary" :class="print.identity_card ? 'btn-success' : 'btn-danger'" @click.prevent="getProvider()"><i class="fa fa-search"></i></button></div>
+                        </div>
+                        <div v-if="print.identity_card">
                             <div class="row form-group">
-                                <div class="col col-md-3"><label for="text-input" class="form-control-label">Introduzca el código</label></div>
-                                <div class="col-12 col-md-8"><input type="text" id="text-input" name="code" class="form-control" v-model="print.code"></div>
-                                <div class="col-12 col-md-1">
-                                    <button type="button" class="btn btn-primary" :class="print.identity_card ? 'btn-success' : 'btn-danger'" @click.prevent="getProvider()"><i class="fa fa-search"></i></button></div>
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nombre de la Empresa</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.name }}</p></div>
                             </div>
-                            <div v-if="print.identity_card">
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">NIT</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.nit }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Fundaempresa</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.fundaempresa }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Actividad economica</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.economic_activity }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Ciudad de residencia</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.residence_city }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Telefono</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.phone }}</p></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Direccion de la empresa</label></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.address }}</p></div>
+                            </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Apellidos</label></div>
                                 <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.last_name }}</p></div>
@@ -536,28 +564,20 @@ Proveedores: Persona Juridica
                                 </div>
                             </div>
                             <div class="row form-group">
-                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">NIT</label></div>
-                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.nit }}</p></div>
-                            </div>
-                            <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nacionalidad</label></div>
                                 <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.nationality }}</p></div>
                             </div>
                             <div class="row form-group">
-                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Actividad economica</label></div>
-                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.economic_activity }}</p></div>
-                            </div>
-                            <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Ciudad de residencia</label></div>
-                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.residence_city }}</p></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.personal_residence_city }}</p></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Teléfonos</label></div>
-                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.phone }}</p></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.personal_phone }}</p></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Dirección</label></div>
-                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.address }}</p></div>
+                                <div class="col-12 col-md-9"><p class="form-control-static">@{{ print.personal_address }}</p></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Corréo Electrónico</label></div>
@@ -613,8 +633,7 @@ Proveedores: Persona Juridica
                 },
                 errors:[],
                 print:{},
-                partners:[],
-                editStatus:false
+                partners:[]
             }
         },
         mounted() {
@@ -773,7 +792,7 @@ Proveedores: Persona Juridica
                 
             },
             getProvider(){
-                axios.get('/providers_personal/search/'+this.print.code).then(response => {
+                axios.get('/provider_company/search/'+this.print.code).then(response => {
                     const print = response.data;
                     this.print = print;
                     toastr.success('Proveedor encontrado', '¡Exito!');
@@ -791,9 +810,10 @@ Proveedores: Persona Juridica
                 data.append('code', this.print.code);
                 data.append('mount_awarded', this.print.mount_awarded);
                 data.append('detail_mount_awarded', this.print.detail_mount_awarded);
-                axios.post('/providers_personal/provider_personals/pdf', data, {
+                axios.post('/provider_company/pdf', data, {
                     responseType: 'blob'
                 }).then(response => {
+                    toastr.warning('Generando archivo', 'Pdf Guardado con exito');
                     var d = new Date();
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
@@ -811,7 +831,7 @@ Proveedores: Persona Juridica
                 data.append('code', this.print.code);
                 data.append('mount_awarded', this.print.mount_awarded);
                 data.append('detail_mount_awarded', this.print.detail_mount_awarded);
-                axios.post('/providers_personal/provider_personals/pdf', data, {
+                axios.post('/provider_company/pdf', data, {
                     responseType: 'arraybuffer'
                 }).then(response => {
                     var pdfFile = new Blob([response.data], {
