@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ProviderCompany;
 use App\Partner;
 use Illuminate\Http\Request;
 
@@ -78,8 +79,11 @@ class PartnerController extends Controller
      * @param  \App\Partner  $partner
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Partner $partner)
+    public function destroy($id)
     {
-        //
+        $partner = Partner::find($id);
+        $partner->delete();
+        $providers = ProviderCompany::with('partner')->orderBy('id', 'DESC')->get();
+        return $providers;
     }
 }

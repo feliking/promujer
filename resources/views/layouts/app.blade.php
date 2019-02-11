@@ -49,7 +49,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-cogs"></i>Proveedores</a>
                         <ul class="sub-menu children dropdown-menu">                            
                             <li><i class="fa fa-puzzle-piece"></i><a href="{{ route('provider_personals.main') }}">Persona Natural</a></li>
-                            <li><i class="fa fa-id-badge"></i><a href="ui-badges.html">Persona Juridica</a></li>
+                            <li><i class="fa fa-id-badge"></i><a href="{{ route('provider_company.main') }}">Persona Juridica</a></li>
                         </ul>
                     </li>
                     <li class="menu-item-has-children dropdown">
@@ -117,7 +117,7 @@
         <header id="header" class="header">
             <div class="top-left">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="./"><img src="{{ asset('images/logo.png') }}" alt="Logo"></a>
+                    <a class="navbar-brand" href="{{ route('dashboard') }}"><img src="{{ asset('images/logo.png') }}" alt="Logo"></a>
                     <a class="navbar-brand hidden" href="./"><img src="{{ asset('images/logo2.png') }}" alt="Logo"></a>
                     <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                 </div>

@@ -46,9 +46,9 @@ Proveedores: Persona Natural
                         <tbody>
                             <tr v-for="(proveedor, index) in providers">
                                 <td>
-                                    <button type="button" class="btn btn-link" title="Documentos guardados" data-toggle="modal" :data-target="'#doc'+proveedor.id"><i class="fa fa-file-text"></i></button>
-                                    <button type="button" class="btn btn-link" title="Editar Proveedor" data-toggle="modal" :data-target="'#edit'+proveedor.id"><i class="fa fa-pencil"></i></button>
-                                    <button type="button" class="btn btn-link" title="Eliminar Proveedor" data-toggle="modal" :data-target="'#del'+proveedor.id"><i class="fa fa-trash-o"></i></button>
+                                    <button type="button" class="btn btn-info" title="Documentos guardados" data-toggle="modal" :data-target="'#doc'+proveedor.id"><i class="fa fa-file-text"></i></button>
+                                    <button type="button" class="btn btn-info" title="Editar Proveedor" data-toggle="modal" :data-target="'#edit'+proveedor.id"><i class="fa fa-pencil"></i></button>
+                                    <button type="button" class="btn btn-danger" title="Eliminar Proveedor" data-toggle="modal" :data-target="'#del'+proveedor.id"><i class="fa fa-trash-o"></i></button>
                                 </td>
                                 <td>@{{ proveedor.code }}</td>
                                 <td>@{{ proveedor.last_name }}</td>

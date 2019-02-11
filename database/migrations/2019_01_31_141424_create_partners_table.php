@@ -19,13 +19,11 @@ class CreatePartnersTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedInteger('provider_company_id');
             $table->foreign('provider_company_id')->references('id')->on('provider_companies');
-            $table->string('last_name');
-            $table->string('first_name');
+            $table->string('full_name');
             $table->string('identity_card');
             $table->unsignedInteger('city_id');
             $table->foreign('city_id')->references('id')->on('cities');
             $table->string('participation');
-            $table->string('nro_acount');
             $table->timestamps();
         });
     }

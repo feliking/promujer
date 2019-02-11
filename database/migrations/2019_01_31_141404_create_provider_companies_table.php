@@ -20,7 +20,7 @@ class CreateProviderCompaniesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name');
             $table->string('nit');
-            $table->string('fundaempresa');
+            $table->string('fundaempresa')->nullable();
             $table->string('economic_activity');
             $table->string('residence_city');
             $table->string('phone');
@@ -36,8 +36,8 @@ class CreateProviderCompaniesTable extends Migration
             $table->string('personal_address');
             $table->string('email')->nullable();
             $table->string('nro_acount')->nullable();
-            $table->string('amount_awarded');
-            $table->string('detail_amount_awarded');
+            $table->string('amount_awarded')->nullable();
+            $table->string('detail_amount_awarded')->nullable();
             $table->string('file_nit')->nullable();
             $table->string('file_fundaempresa')->nullable();
             $table->string('file_identity_card')->nullable();
