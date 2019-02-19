@@ -15,7 +15,7 @@ class UserTableSeeder extends Seeder
             'last_name' => 'Administrador',
             'first_name' => 'Administrador',
             'city_id' => 1,
-            'status' => 'active',
+            'status' => true,
             'gender' => 'M',
             'username' => 'admin',
             'password' => bcrypt('admin')

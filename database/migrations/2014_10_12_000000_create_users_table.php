@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('city_id');
             $table->foreign('city_id')->references('id')->on('cities');
             $table->string('phone')->nullable();
-            $table->string('status');
+            $table->boolean('status')->default(true);
             $table->string('gender');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('username')->unique();
