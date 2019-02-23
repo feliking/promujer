@@ -37,7 +37,6 @@ Administrador: Usuarios
                         <tbody>
                             <tr v-for="(user, index) in users">
                                 <td>
-                                    <button type="button" class="btn btn-info" title="Cambiar Contraseña" data-toggle="modal" :data-target="'#lock'+user.id"><i class="fa fa-lock"></i></button>
                                     <button type="button" class="btn btn-info" title="Permisos" data-toggle="modal" :data-target="'#permi'+user.id"><i class="fa fa-gear"></i></button>
                                     <button type="button" class="btn btn-info" title="Editar Usuario" data-toggle="modal" :data-target="'#edit'+user.id"><i class="fa fa-pencil"></i></button>
                                     <button type="button" class="btn btn-danger" title="Eliminar Usuario" data-toggle="modal" :data-target="'#del'+user.id"><i class="fa fa-trash-o"></i></button>
@@ -137,7 +136,7 @@ Administrador: Usuarios
         </div>
     </div>
     {{-- Fin de modal de agregación --}}
-    {{-- Modal de eliminación de proveedor --}}
+    {{-- Modal de eliminación del usuario --}}
     <div v-for="(user, index) in users" class="modal fade" :id="'del'+user.id" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" :class="!auth ? 'bg-warning' : 'bg-success'">
@@ -218,7 +217,15 @@ Administrador: Usuarios
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nombre de usuario</label></div>
                                 <div class="col-12 col-md-9"><input type="text" name="nationality" class="form-control" v-model="user.username" :class="errors.username ? 'is-invalid' : ''" required>
-                                    <small v-if="errors.username" class="form-text text-danger">@{{ errors.username }}</small>
+                                    <small v-if="errors.username" class="form-text text-danger">@{{ errors.username[0] }}</small>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning text-center" role="alert">
+                                <i class="fa fa-info-circle"></i> Sí deja el campo de la contraseña vacío se mantendra la contraseña actual
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nueva contraseña</label></div>
+                                <div class="col-12 col-md-9"><input type="password" name="nationality" class="form-control" v-model="user.password">
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -231,6 +238,34 @@ Administrador: Usuarios
         </div>
     </div>
     {{-- Fin de modal de edición --}}
+    {{-- Modal de Permisos --}}
+    <div v-for="(user, index) in users" class="modal fade" :id="'permi'+user.id" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticModalLabel">Permisos del usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div v-for="(rol, index) in roles" class="row">
+                        <div class="col-md-2">
+                            <button v-if="verifiRole(user, rol.id)" class="btn btn-success" @click.prevent="deleteRole(user, rol.id)"><i class="fa fa-check"></i></button>
+                            <button v-else class="btn btn-danger" @click.prevent="addRole(user, rol.id)"><i class="fa fa-times"></i></button>
+                        </div>
+                        <div class="col-md-10">
+                            @{{ rol.module }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-center col-md-12 bg-white">
+                    <button type="button" class="btn btn-warning col-md-6" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Fin de modal de permisos --}}
 @endsection
 @section('scripts')
 <script src="{{ asset('js/lib/data-table/datatables.min.js') }}"></script>
@@ -289,7 +324,7 @@ Administrador: Usuarios
                         }
                     },
                 }
-                );}, 1000);
+                );}, 0);
             });
         },
         methods:{
@@ -323,42 +358,25 @@ Administrador: Usuarios
                     toastr.error('¡Error!', 'Verifique los datos por favor');
                 });
             },
-            deleteProvider(provider, index){
-                axios.delete('/provider_personals/'+provider.id).then(() => {
-                    this.providers.splice(index, 1);
-                    toastr.success('Operacion exitosa', 'Proveedor Eliminado');
-                }).catch(error => {
-                    toastr.error('¡Error!', 'No se pudo eliminar');
-                });
-            },
-            updateProvider(provider, index){
-                const file_identity_card = 'file_identity_card_update'+provider.id;
-                const file_nit = 'file_nit_update'+provider.id;
+            updateUser(user, index){
                 let data = new FormData();
                 data.append('_method', 'PATCH');
-                data.append('code', provider.code);
-                data.append('last_name', provider.last_name);
-                data.append('first_name', provider.first_name);
-                data.append('identity_card', provider.identity_card);
-                data.append('city_id', provider.city_id);
-                data.append('nit', provider.nit);
-                data.append('nationality', provider.nationality);
-                data.append('economic_activity', provider.economic_activity);
-                data.append('residence_city', provider.residence_city);
-                data.append('phone', provider.phone);
-                data.append('address', provider.address);
-                data.append('email', provider.email);
-                data.append('nro_acount', provider.nro_acount);
-                data.append('file_identity_card_update', document.getElementById(file_identity_card).files[0]);
-                data.append('file_nit_update', document.getElementById(file_nit).files[0]);
-                axios.post('/provider_personals/'+provider.id, data).then(response => {
-                    const providers = response.data;
-                    this.providers = providers;
-                    document.getElementById(file_identity_card).value = null;
-                    document.getElementById(file_nit).value = null;
+                data.append('last_name', user.last_name);
+                data.append('first_name', user.first_name);
+                data.append('gender', user.gender);
+                data.append('city_id', user.city_id);
+                data.append('phone', user.phone);
+                data.append('username', user.username);
+                if(user.password){
+                    data.append('password', user.password);
+                }
+                axios.post('/user/'+user.id, data).then(response => {
+                    const users = response.data;
+                    this.users = users;
                     this.errors = [];
-                    toastr.success('Operacion exitosa', 'Proveedor Actualizado');
+                    toastr.success('Operacion exitosa', 'Usuario Actualizado');
                 }).catch(error => {
+                    this.errors = error.response.data.errors;
                     toastr.error('¡Error!', 'No se pudo actualizar');
                 });
                 
@@ -398,6 +416,39 @@ Administrador: Usuarios
                 }).catch(error => {
                     toastr.error('Ocurrio un error', 'Consulte con el desarrollador');
                 })
+            },
+            verifiRole(user, id){
+                var sw = false;
+                for(var i=0; i<user.roles.length; i++){
+                    if(user.roles[i].pivot.role_id == id){
+                        sw = true;
+                    }
+                }
+                return sw;
+            },
+            deleteRole(user, id){
+                const data = new FormData();
+                data.append('user_id', user.id);
+                data.append('role_id', id);
+                axios.post('/user/delete/role', data).then(response => {
+                    users = response.data;
+                    this.users = users;
+                    toastr.warning('Permiso revocado', 'Operación exitosa');
+                }).catch(error => {
+                    toastr.error('No se puso ejecutar la operación', 'Consulte con el desarrollador');
+                });
+            },
+            addRole(user, id){
+                const data = new FormData();
+                data.append('user_id', user.id);
+                data.append('role_id', id);
+                axios.post('/user/add/role', data).then(response => {
+                    users = response.data;
+                    this.users = users;
+                    toastr.success('Permiso concedido', 'Operación exitosa');
+                }).catch(error => {
+                    toastr.error('No se puso ejecutar la operación', 'Consulte con el desarrollador');
+                });
             }
         }
         

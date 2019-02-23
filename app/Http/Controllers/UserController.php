@@ -80,7 +80,30 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        if($request->username != $user->username){
+            $rules = [
+                'username' => 'unique:users',
+            ];
+    
+            $messages = [
+                'username.unique' => 'El nombre de usuario ya existe'
+            ];
+    
+            $this->validate($request, $rules, $messages);
+        }
+        $user->last_name = $request->last_name;
+        $user->first_name = $request->first_name;
+        $user->city_id = $request->city_id;
+        $user->phone = $request->phone;
+        $user->gender = $request->gender;
+        $user->username = $request->username;
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+        $users = User::with('city')->with('roles')->where('id', '>', 1)->orderBy('id', 'DESC')->get();
+        return $users;
     }
 
     /**
@@ -93,6 +116,8 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $user->roles()->detach();
+        $user->delete();
+        return response('Usuario eliminado', 200);
     }
 
     public function status(Request $request){
@@ -111,5 +136,56 @@ class UserController extends Controller
         else{
             return abort(422);
         }
+    }
+
+    public function deleteRole(Request $request){
+        $user = User::find($request->user_id);
+        $user->roles()->detach($request->role_id);
+        $users = User::with('city')->with('roles')->where('id', '>', 1)->orderBy('id', 'DESC')->get();
+        return $users;
+    }
+
+    public function addRole(Request $request){
+        $user = User::find($request->user_id);
+        $user->roles()->attach($request->role_id);
+        $users = User::with('city')->with('roles')->where('id', '>', 1)->orderBy('id', 'DESC')->get();
+        return $users;
+    }
+
+    public function config(){
+        if (auth()->id() != 1) {
+            abort(403, 'No tiene autorización para ver el siguiente contenido');
+        }
+        $user = User::find(1);
+        return view('users.admin', compact('user'));
+    }
+
+    public function updateAdmin(Request $request){
+        $user = User::find(1);
+        if($request->username != $user->username){
+            $rules = [
+                'username' => 'unique:users',
+            ];
+    
+            $messages = [
+                'username.unique' => 'El nombre de usuario ya existe'
+            ];
+    
+            $this->validate($request, $rules, $messages);
+        }
+        $rules = [
+            'password' => ['required', 'min:6', 'confirmed']
+        ];
+
+        $messages = [
+            'password.confirmed' => 'Las contraseñas no coinciden',
+            'password.min' => 'Por lo menos la contraseña debe contener 6 caracteres'
+        ];
+        $this->validate($request, $rules, $messages);
+
+        $user->username = $request->username;
+        $user->password = bcrypt($request->password);
+        $user->save();
+        return redirect('/');
     }
 }

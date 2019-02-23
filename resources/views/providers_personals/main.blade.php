@@ -472,7 +472,7 @@ Proveedores: Persona Natural
                         }
                     },
                 }
-                );}, 1000);
+                );}, 0);
             });
         },
         methods:{

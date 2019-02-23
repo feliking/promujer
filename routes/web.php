@@ -20,13 +20,17 @@ Auth::routes();
 Route::group(['middleware' => ['auth', 'status']], function(){
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/home', 'HomeController@index')->name('home');
-    
-    //Usuarios
-    Route::get('/user/main', 'UserController@main')->name('user.main');
-    Route::apiResource('user', 'UserController');
-    Route::post('/user/status', 'UserController@status')->name('user.status');
-    Route::post('/user/verifica', 'UserController@verifica')->name('user.verifica');
-    
+    Route::group(['middleware' => ['admin']], function(){
+        //Usuarios
+        Route::get('/user/main', 'UserController@main')->name('user.main');
+        Route::apiResource('user', 'UserController');
+        Route::post('/user/status', 'UserController@status')->name('user.status');
+        Route::post('/user/verifica', 'UserController@verifica')->name('user.verifica');
+        Route::post('/user/delete/role', 'UserController@deleteRole')->name('user.deleteRole');
+        Route::post('/user/add/role', 'UserController@addRole')->name('user.addRole');
+        Route::get('/user/config/administrator', 'UserController@config')->name('user.config');
+        Route::post('/user/update/admin', 'UserController@updateAdmin')->name('user.updateadmin');
+    });
     //Persona Natural
     Route::get('/providers_personal/main', 'ProviderPersonalController@main')->name('provider_personals.main');
     Route::apiResource('provider_personals', 'ProviderPersonalController');

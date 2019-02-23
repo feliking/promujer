@@ -34,6 +34,11 @@
 </head>
 
 <body class="open">
+        <div class="preloader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
+        </div>
+        
     <!-- Left Panel -->
 
     <aside id="left-panel" class="left-panel">
@@ -51,7 +56,9 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-users"></i>Administrador</a>
                         <ul class="sub-menu children dropdown-menu">                            
                             <li><i class="fa fa-puzzle-piece"></i><a href="{{ route('user.main') }}">Usuarios</a></li>
-                            <li><i class="fa fa-id-badge"></i><a href="{{ route('user.main') }}">Configuración</a></li>
+                            @if(Auth::user()->id == 1)
+                                <li><i class="fa fa-id-badge"></i><a href="{{ route('user.config') }}">Configurar administrador</a></li>
+                            @endif
                         </ul>
                     </li>
                     @endif
@@ -160,14 +167,12 @@
                         </a>
 
                         <div class="user-menu dropdown-menu">
-                            <a class="nav-link" href="#"><i class="fa fa-user"></i>My Profile</a>
-
-                            <a class="nav-link" href="#"><i class="fa fa-bell-o"></i>Notifications <span class="count">13</span></a>
-
-                            <a class="nav-link" href="#"><i class="fa fa-cog"></i>Settings</a>
+                            <p class="nav-link" href="#"><i class="fa fa-user"></i>{{ Auth::user()->first_name }}</p>
+                            <hr>
+                            {{-- <a class="nav-link" href="#"><i class="fa fa-cog"></i>Contraseña</a> --}}
 
                             <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();"><i class="fa fa-power-off" ></i>Logout</a>
+                            document.getElementById('logout-form').submit();"><i class="fa fa-power-off" ></i>Cerrar Sesión</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
@@ -208,7 +213,7 @@
                         Copyright &copy; 2019 Pro Mujer IFD La Paz - Bolivia
                     </div>
                     <div class="col-sm-6 text-right">
-                        Designed by <a href="https://colorlib.com">Feliking</a>
+                        Designed by <a href="https://feliking.github.io/portafolio/">Feliking</a>
                     </div>
                 </div>
             </div>

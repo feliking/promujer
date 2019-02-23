@@ -16,8 +16,14 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::user()->id != 1){
-            abort(403, "¡No tienes edad para ver este video! le diremos a tus padres.");
+        $sw = false;
+        foreach (Auth::user()->roles as $role) {
+            if($role->pivot->role_id == 1){
+                $sw = true;
+            }
+        }
+        if (!$sw) {
+            abort(403, 'No esta autorizado para ver este contenido');
         }
         return $next($request);
     }

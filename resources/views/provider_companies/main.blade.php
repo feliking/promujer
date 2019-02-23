@@ -667,7 +667,7 @@ Proveedores: Persona Juridica
                         }
                     },
                 }
-                );}, 1000);
+                );}, 0);
             });
         },
         methods:{

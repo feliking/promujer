@@ -3,6 +3,9 @@ $.noConflict();
 jQuery(document).ready(function($) {
 
 	"use strict";
+	$(function() {
+		$(".preloader").fadeOut();
+	});
 
 	[].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {
 		new SelectFx(el);
