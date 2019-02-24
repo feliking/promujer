@@ -203,28 +203,12 @@ class ProviderPersonalController extends Controller
     }
     public function pdf(Request $request){
         //return $request;
+        $mount_awarded = $request->mount_awarded;
+        $detail_mount_awarded = $request->detail_mount_awarded;
+        $carbon = new Carbon();
+        $date = $carbon->now();
         $provider = ProviderPersonal::where('code', $request->code)->first();
-        $date = Carbon::now();
-        // $params = array(
-        //     'id' => $provider->id,
-        //     'code' => $request->code,
-        //     'last_name' => $request->last_name,
-        //     'first_name' => $request->code,
-        //     'identity_card' => $request->identity_card,
-        //     'city_id' => $provider->city->name,
-        //     'nit' => $request->nit,
-        //     'nationality' => $request->nationality,
-        //     'economic_activity' => $request->economic_activity,
-        //     'residence_city' => $request->residence_city,
-        //     'phone' => $request->phone,
-        //     'address' => $request->address,
-        //     'email' => $request->email,
-        //     'nro_acount' => $request->nro_acount,
-        //     'amount_awarded' => $request->amount_awarded,
-        //     'detail_amount_awarded' => $request->detail_amount_awarded,
-        //     'user' => auth()->user(),
-        // );
-        return PDF::loadView('layouts.print.print_provider_personal', compact('provider'))
+        return PDF::loadView('providers_personals.print.print_provider_personals', compact('provider', 'date', 'mount_awarded', 'detail_mount_awarded'))
 				->setPaper('letter')
 				->stream($request->code." ".$date.".pdf");
     }
