@@ -140,11 +140,11 @@ Proveedores: Persona Natural
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">Carnet de identidad</label></div>
-                                <div class="col-12 col-md-9"><input type="file" id="file_identity_card" ref="file_identity_card" name="file_identity_card" class="form-control-file"></div>
+                                <div class="col-12 col-md-9"><input type="file" id="file_identity_card" ref="file_identity_card" name="file_identity_card" class="form-control-file" accept="image/*, application/pdf"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">NIT</label></div>
-                                <div class="col-12 col-md-9"><input type="file" id="file_nit" ref="file_nit" name="file_nit" class="form-control-file"></div>
+                                <div class="col-12 col-md-9"><input type="file" id="file_nit" ref="file_nit" name="file_nit" class="form-control-file" accept="image/*, application/pdf"></div>
                             </div>
                     </div>
                     <div class="modal-footer">
@@ -296,7 +296,7 @@ Proveedores: Persona Natural
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">Carnet de identidad</label></div>
-                                <div class="col-12 col-md-7"><input type="file" :id="'file_identity_card_update'+proveedor.id" ref="file_identity_card" name="file_identity_card_update" class="form-control-file">
+                                <div class="col-12 col-md-7"><input type="file" :id="'file_identity_card_update'+proveedor.id" ref="file_identity_card" name="file_identity_card_update" class="form-control-file" accept="image/*, application/pdf">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <a :href="'../storage/'+proveedor.file_identity_card" target="_blank">
@@ -308,7 +308,7 @@ Proveedores: Persona Natural
                             
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">NIT</label></div>
-                                <div class="col-12 col-md-7"><input type="file" :id="'file_nit_update'+proveedor.id" ref="file_nit" name="file_nit_update" class="form-control-file"></div>
+                                <div class="col-12 col-md-7"><input type="file" :id="'file_nit_update'+proveedor.id" ref="file_nit" name="file_nit_update" class="form-control-file" accept="image/*, application/pdf"></div>
                                 <div class="col-12 col-md-2">
                                     <a :href="'../storage/'+proveedor.file_nit" target="_blank">
                                         <button v-if="proveedor.file_nit" type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>

@@ -304,4 +304,22 @@ class ProviderCompanyController extends Controller
 				->setPaper('letter')
 				->stream($request->code." ".$date.".pdf");
     }
+
+    public function updatePartners(Request $request){
+        //return $request;
+        $provider = ProviderCompany::find($request->id);
+        $provider->partners()->delete();
+        foreach(json_decode($request->partners) as $partner){
+            $new = new Partner();
+            $new->user_id = auth()->id();
+            $new->provider_company_id = $request->id;
+            $new->full_name = $partner->full_name;
+            $new->identity_card = $partner->identity_card;
+            $new->city_id = $partner->city_id;
+            $new->participation = $partner->participation;
+            $new->save();
+        }
+        $providers = ProviderCompany::with('partners')->orderBy('id','DESC')->get();
+        return $providers;
+    }
 }

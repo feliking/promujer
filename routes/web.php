@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth', 'status']], function(){
     Route::get('/provider_company/search/{id}', 'ProviderCompanyController@search')->name('provider_company.search');
     Route::post('/provider_company/pdf', 'ProviderCompanyController@pdf');
     Route::get('/provider_company/getpartners/{id}', 'ProviderCompanyController@getPartners')->name('provider_company.partners');
+    Route::put('/provider_company/update/partner', 'ProviderCompanyController@updatePartners');
     
     //Partner
     Route::apiResource('/partner', 'PartnerController');

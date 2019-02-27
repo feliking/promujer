@@ -93,7 +93,6 @@ Proveedores: Persona Juridica
                         </button>
                     </div>
                     <div class="modal-body">
-                            @{{ $data.provider }}
                             <div class="text-center">
                                 <h5><b>Empresa</b></h5><br>
                             </div>
@@ -178,19 +177,19 @@ Proveedores: Persona Juridica
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">Carnet de identidad</label></div>
-                                <div class="col-12 col-md-9"><input type="file" id="file_identity_card" name="file_identity_card" class="form-control-file"></div>
+                                <div class="col-12 col-md-9"><input type="file" id="file_identity_card" name="file_identity_card" class="form-control-file" accept="image/*, application/pdf"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">NIT</label></div>
-                                <div class="col-12 col-md-9"><input type="file" id="file_nit" name="file_nit" class="form-control-file"></div>
+                                <div class="col-12 col-md-9"><input type="file" id="file_nit" name="file_nit" class="form-control-file" accept="image/*, application/pdf"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">Fundaempresa</label></div>
-                                <div class="col-12 col-md-9"><input type="file" id="file_fundaempresa" name="file_identity_card" class="form-control-file"></div>
+                                <div class="col-12 col-md-9"><input type="file" id="file_fundaempresa" name="file_identity_card" class="form-control-file" accept="image/*, application/pdf"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col col-md-3"><label for="file-input" class=" form-control-label">Otros...</label></div>
-                                <div class="col-12 col-md-9"><input type="file" id="file_other" name="file_nit" class="form-control-file"></div>
+                                <div class="col-12 col-md-9"><input type="file" id="file_other" name="file_nit" class="form-control-file" accept="image/*, application/pdf"></div>
                             </div>
                             <div class="row text-center">
                                 <div class="col-md-2"></div>
@@ -332,14 +331,40 @@ Proveedores: Persona Juridica
                                             <th scope="col">Carnet de identidad</th>
                                             <th scope="col">Exp.</th>
                                             <th scope="col">% de participación</th>
+                                            <th v-if="editPartner"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(partner, index) in proveedor.partners">
-                                            <td>@{{ partner.full_name }}</td>
-                                            <td>@{{ partner.identity_card }}</td>
-                                            <td>@{{ getCity(partner) }}</td>
-                                            <td>@{{ partner.participation }} %</td>
+                                        <tr v-for="(socio, index) in proveedor.partners">
+                                            <td>
+                                                <p v-if="!editPartner" class="text-light">@{{ socio.full_name }}</p>
+                                                <div v-else class="form-group">
+                                                    <input type="text" class="form-control" v-model="socio.full_name" required>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <p v-if="!editPartner" class="text-light">@{{ socio.identity_card }}</p>
+                                                <div v-else class="form-group">
+                                                    <input type="text" class="form-control" v-model="socio.identity_card" required> 
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <p v-if="!editPartner" class="text-light">@{{ getCity(socio) }}</p>
+                                                <div v-else class="form-group">
+                                                    <select name="city_id" class="form-control" v-model="socio.city_id" required>
+                                                        <option v-for="(city, index) in cities" :value="city.id">@{{ city.name }}</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <p v-if="!editPartner" class="text-light">@{{ socio.participation }} %</p>
+                                                <div v-else class="form-group">
+                                                    <input type="text" class="form-control" v-model="socio.participation" required>
+                                                </div>
+                                            </td>
+                                            <td v-if="editPartner">
+                                                <button type="button" @click.prevent="splicePartner(proveedor, index)" class="btn btn-danger"><i class="fa fa-times"></i></button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -347,8 +372,14 @@ Proveedores: Persona Juridica
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div v-if="!editPartner" class="modal-footer">
+                    <button type="button" class="btn btn-warning" @click.prevent="activePartner(proveedor)">Editar Socios</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+                <div v-else class="modal-footer">
+                    <button type="button" class="btn btn-warning" @click.prevent="addedPartner(proveedor)">Añadir socio</button>
+                    <button type="button" class="btn btn-success" @click.prevent="updatePartner(proveedor.partners, proveedor.id)">Guardar Cambios</button>
+                    <button type="button" class="btn btn-danger" @click.prevent="disablePartner(proveedor)">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -367,7 +398,6 @@ Proveedores: Persona Juridica
                     </button>
                 </div>
                 <div class="modal-body">
-                        @{{ proveedor }}
                         <div class="text-center">
                             <h5><b>Empresa</b></h5><br>
                         </div>
@@ -452,7 +482,7 @@ Proveedores: Persona Juridica
                         </div>
                         <div class="row form-group">
                             <div class="col col-md-3"><label for="file-input" class=" form-control-label">Carnet de identidad</label></div>
-                            <div class="col-12 col-md-7"><input type="file" :id="'file_identity_card_update'+proveedor.id" name="file_identity_card" class="form-control-file"></div>
+                            <div class="col-12 col-md-7"><input type="file" :id="'file_identity_card_update'+proveedor.id" name="file_identity_card" class="form-control-file" accept="image/*, application/pdf"></div>
                             <div class="col-12 col-md-2">
                                 <a :href="'../storage/'+proveedor.file_identity_card" target="_blank">
                                     <button v-if="proveedor.file_identity_card" type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
@@ -462,7 +492,7 @@ Proveedores: Persona Juridica
                         </div>
                         <div class="row form-group">
                             <div class="col col-md-3"><label for="file-input" class=" form-control-label">NIT</label></div>
-                            <div class="col-12 col-md-7"><input type="file" :id="'file_nit_update'+proveedor.id" name="file_nit" class="form-control-file"></div>
+                            <div class="col-12 col-md-7"><input type="file" :id="'file_nit_update'+proveedor.id" name="file_nit" class="form-control-file" accept="image/*, application/pdf"></div>
                             <div class="col-12 col-md-2">
                                 <a :href="'../storage/'+proveedor.file_nit" target="_blank">
                                     <button v-if="proveedor.file_nit" type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
@@ -472,7 +502,7 @@ Proveedores: Persona Juridica
                         </div>
                         <div class="row form-group">
                             <div class="col col-md-3"><label for="file-input" class=" form-control-label">Fundaempresa</label></div>
-                            <div class="col-12 col-md-7"><input type="file" :id="'file_fundaempresa_update'+proveedor.id" name="file_identity_card" class="form-control-file"></div>
+                            <div class="col-12 col-md-7"><input type="file" :id="'file_fundaempresa_update'+proveedor.id" name="file_identity_card" class="form-control-file" accept="image/*, application/pdf"></div>
                             <div class="col-12 col-md-2">
                                 <a :href="'../storage/'+proveedor.file_fundaempresa" target="_blank">
                                     <button v-if="proveedor.file_fundaempresa" type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
@@ -482,7 +512,7 @@ Proveedores: Persona Juridica
                         </div>
                         <div class="row form-group">
                             <div class="col col-md-3"><label for="file-input" class=" form-control-label">Otros...</label></div>
-                            <div class="col-12 col-md-7"><input type="file" :id="'file_others_update'+proveedor.id" name="file_nit" class="form-control-file"></div>
+                            <div class="col-12 col-md-7"><input type="file" :id="'file_others_update'+proveedor.id" name="file_nit" class="form-control-file" accept="image/*, application/pdf"></div>
                             <div class="col-12 col-md-2">
                                 <a :href="'../storage/'+proveedor.file_others" target="_blank">
                                     <button v-if="proveedor.file_others" type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
@@ -633,7 +663,8 @@ Proveedores: Persona Juridica
                 },
                 errors:[],
                 print:{},
-                partners:[]
+                partners:[],
+                editPartner: false,
             }
         },
         mounted() {
@@ -854,6 +885,38 @@ Proveedores: Persona Juridica
                     this.providers = providers;
                 });
             },
+            activePartner(proveedor){
+                this.editPartner = !this.editPartner;
+                this.provider.partners = proveedor.partners;
+            },
+            disablePartner(proveedor){
+                this.editPartner = !this.editPartner;
+                axios.get('/provider_company').then(response => {
+                this.cities = response.data[0];
+                this.providers = response.data[1];
+                this.partners = response.data[2];
+                });
+            },
+            splicePartner(proveedor, index){
+                proveedor.partners.splice(index, 1);
+            },
+            updatePartner(partners, id){
+                const data = {
+                    partners: JSON.stringify(partners),
+                    id: id
+                };
+                axios.put('/provider_company/update/partner', data).then(response => {
+                    this.providers = response.data;
+                    this.editPartner = false;
+                    toastr.success('Operación exitosa', 'Proveedor actualizado');
+                }).catch(error => {
+                    toastr.error('¡Error!', 'No se puedo actualizar al proveedor');
+                });
+            },
+            addedPartner(proveedor){
+                const partner = {};
+                proveedor.partners.push(partner);
+            }
         }
         
     });
